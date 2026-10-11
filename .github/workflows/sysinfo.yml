@@ -1,0 +1,17 @@
+name: sysinfo
+
+on:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compilation
+        run: |
+          mkdir -p bin
+          make build
