@@ -3,35 +3,51 @@ name: mysystem
 on:
   push:
     branches: ['feature/**']       # jamais sur un tag
-    paths:
-      - 'script/mysystem/**'
-      - '.github/workflows/mysystem.yml'
+
 
 permissions:
   contents: read
+
+env:
+  SCRIPT_PY: script/mysystem/mysystem.py
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v4             # obligatoire avant une action locale
+      - uses: ./.github/actions/setup-mysystem
         with:
-          python-version: '3.13'
-      - name: Dépendances
-        run: pip install ifaddr psutil pylint
+          extra-packages: pylint
       - name: Lint
-        run: pylint --disable=missing-docstring script/mysystem/mysystem.py
+        run: pylint --disable=missing-docstring "$SCRIPT_PY"
 
   run:
     needs: lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-      - name: Dépendances
-        run: pip install ifaddr psutil
+      - uses: actions/checkout@v4             # obligatoire avant une action locale
+      - uses: ./.github/actions/setup-mysystem
       - name: Exécution
-        run: python script/mysystem/mysystem.py
+        run: python "$SCRIPT_PY"
+
+  unit:
+    needs: lint
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      checks: write                           # pour publier le rapport de tests
+    steps:
+      - uses: actions/checkout@v4             # obligatoire avant une action locale
+      - uses: ./.github/actions/setup-mysystem
+        with:
+          extra-packages: pytest
+      - name: Tests unitaires
+        run: pytest --junitxml=report.xml
+      - name: Rapport de tests
+        if: ${{ !cancelled() }}
+        uses: dorny/test-reporter@v2
+        with:
+          name: Tests mysystem        # nom du check affiché
+          path: report.xml
+          reporter: java-junit        # format JUnit XML (celui de pytest)

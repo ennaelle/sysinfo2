@@ -2,8 +2,8 @@ name: sysinfo
 
 on:
   push:
-    branches: ['feature/**']   # pas de clé tags → un push de tag est ignoré
-    
+    branches: ['feature/**']       # jamais sur un tag
+
 permissions:
   contents: read
 
@@ -17,18 +17,7 @@ jobs:
 
   build:
     needs: lint
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Compilation
-        run: |
-          mkdir -p bin
-          make build
-      - name: Publication du binaire
-        uses: actions/upload-artifact@v4
-        with:
-          name: sysinfo-${{ github.sha }}
-          path: bin/sysinfo
+    uses: ./.github/workflows/build-sysinfo.yml    # reusable workflow
 
   run:
     needs: build
@@ -37,9 +26,9 @@ jobs:
       - name: Récupération du binaire
         uses: actions/download-artifact@v4
         with:
-          name: sysinfo-${{ github.sha }}
+          name: ${{ needs.build.outputs.artifact }}
           path: bin
       - name: Exécution
         run: |
-          chmod +x bin/sysinfo      # les artefacts ne conservent pas les droits d'exécution
+          chmod +x bin/sysinfo
           ./bin/sysinfo
