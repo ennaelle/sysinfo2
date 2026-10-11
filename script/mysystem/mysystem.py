@@ -47,6 +47,6 @@ for adapter in ifaddr.get_adapters():
     else:
         print("Pas d'adresse IP")
 
-# Mémoire
+# Mémoire RAM
 print("\n*** Etat de la memoire vive")
 print(f'Mémoire: {psutil.virtual_memory()}')
