@@ -3,36 +3,33 @@ name: mysystem
 on:
   push:
     branches: ['feature/**']       # jamais sur un tag
+    paths:
+      - 'script/mysystem/**'
+      - '.github/workflows/mysystem.yml'
+      - '.github/actions/setup-mysystem/**'
 
 permissions:
   contents: read
+
+env:
+  SCRIPT_PY: script/mysystem/mysystem.py
 
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v4             # obligatoire avant une action locale
+      - uses: ./.github/actions/setup-mysystem
         with:
-          python-version: '3.13'
-          cache: 'pip'                                          # active le cache pip
-          cache-dependency-path: script/mysystem/requirements.txt
-      - name: Dépendances
-        run: pip install -r script/mysystem/requirements.txt pylint
+          extra-packages: pylint
       - name: Lint
-        run: pylint --disable=missing-docstring script/mysystem/mysystem.py
+        run: pylint --disable=missing-docstring "$SCRIPT_PY"
 
   run:
     needs: lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.13'
-          cache: 'pip'                                          # active le cache pip
-          cache-dependency-path: script/mysystem/requirements.txt
-      - name: Dépendances
-        run: pip install -r script/mysystem/requirements.txt
+      - uses: actions/checkout@v4             # obligatoire avant une action locale
+      - uses: ./.github/actions/setup-mysystem
       - name: Exécution
-        run: python script/mysystem/mysystem.py
+        run: python "$SCRIPT_PY"
