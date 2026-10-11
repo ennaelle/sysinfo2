@@ -46,8 +46,8 @@ jobs:
         run: pytest --junitxml=report.xml
       - name: Rapport de tests
         if: ${{ !cancelled() }}
-        uses: dorny/test-reporter@v2
+        uses: mikepenz/action-junit-report@v5
         with:
-          name: Tests mysystem        # nom du check affiché
-          path: report.xml
-          reporter: java-junit        # format JUnit XML (celui de pytest)
+          report_paths: report.xml
+          detailed_summary: true     # tableau test par test dans le résumé du run
+          include_passed: true       # lister aussi les tests réussis
