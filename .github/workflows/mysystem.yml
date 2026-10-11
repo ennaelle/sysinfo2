@@ -44,14 +44,10 @@ jobs:
           extra-packages: pytest
       - name: Tests unitaires
         run: pytest --junitxml=report.xml
-      - name: Rapport de tests (résumé + annotations)
+      - name: Rapport de tests
         if: ${{ !cancelled() }}
-        uses: mikepenz/action-junit-report@v5
+        uses: dorny/test-reporter@v2
         with:
-          report_paths: report.xml
-      - name: Archivage du rapport JUnit
-        if: ${{ !cancelled() }}
-        uses: actions/upload-artifact@v4
-        with:
-          name: junit-report-${{ github.sha }}
+          name: Tests mysystem        # nom du check affiché
           path: report.xml
+          reporter: java-junit        # format JUnit XML (celui de pytest)
