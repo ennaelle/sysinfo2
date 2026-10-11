@@ -2,7 +2,8 @@ name: sysinfo
 
 on:
   push:
-
+    branches: ['feature/**']   # pas de clé tags → un push de tag est ignoré
+    
 permissions:
   contents: read
 
