@@ -3,9 +3,6 @@ name: mysystem
 on:
   push:
     branches: ['feature/**']       # jamais sur un tag
-    paths:
-      - 'script/mysystem/**'
-      - '.github/workflows/mysystem.yml'
 
 permissions:
   contents: read
