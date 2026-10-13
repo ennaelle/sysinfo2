@@ -1,3 +1,5 @@
+…/actions/workflows/ci.yml/badge.svg
+
 # Gitlab-ci training
 
 Setup CI/CD pipeline for sysinfo project
