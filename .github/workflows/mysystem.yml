@@ -1,9 +1,7 @@
 name: mysystem
 
 on:
-  push:
-    branches: ['feature/**']       # jamais sur un tag
-
+  workflow_dispatch: 
 
 permissions:
   contents: read
