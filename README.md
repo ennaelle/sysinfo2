@@ -1,3 +1,5 @@
+[![mysystem](https://github.com/ennaelle/sysinfo2/actions/workflows/mysystem.yml/badge.svg)](https://github.com/ennaelle/sysinfo2/actions/workflows/mysystem.yml)
+
 # Gitlab-ci training
 
 Setup CI/CD pipeline for sysinfo project
